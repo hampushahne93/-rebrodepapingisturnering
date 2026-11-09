@@ -51,7 +51,7 @@ public/bracket.js
 |---|---|
 | `DATABASE_URL` | connection string från Neon |
 | `ADMIN_CODE` | en hemlig kod som bara du vet, t.ex. `pingis-boss-2026` |
-| `DEADLINE` | *(valfri)* sista anmälan, t.ex. `2026-11-25T23:59:00+01:00` |
+| `DEADLINE` | *(valfri)* sista anmälan, t.ex. `2026-11-20T23:59:00+01:00` |
 | `LOCK_BRACKET` | *(valfri)* `true` = trädet är hemligt tills deadline. Standard är `false`. |
 
 4. Klicka **Deploy**. När det står *Live* får du en adress, t.ex. `https://pingis-cup.onrender.com`. Det är länken du skickar till kollegorna.

@@ -9,7 +9,7 @@ const B = require('./public/bracket.js');
 
 /* ===== Inställningar (kan ändras med miljövariabler på Render) ===== */
 const PORT = process.env.PORT || 3000;
-const DEADLINE = new Date(process.env.DEADLINE || '2026-11-25T23:59:00+01:00'); // sista anmälan
+const DEADLINE = new Date(process.env.DEADLINE || '2026-11-20T23:59:00+01:00'); // sista anmälan
 const LOCK_BRACKET = (process.env.LOCK_BRACKET || 'false') === 'true';          // dölj trädet tills deadline
 const ADMIN_CODE = process.env.ADMIN_CODE || '';
 const DATABASE_URL = process.env.DATABASE_URL || '';
