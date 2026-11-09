@@ -5,6 +5,7 @@ let S = { players: [], order: null, results: {}, scores: {}, log: [], config: nu
 let adminCode = sessionStorage.getItem('pingis-admin') || '';
 let isAdmin = false;
 let selectedKey = null;
+let previewing = false; // admin förhandsvisar ett dolt träd
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -141,10 +142,10 @@ function alertMsg(text) { setMsg($('adminMsg'), text, false); }
 
 /* ===== Lämna in resultat ===== */
 function renderReport(t) {
-  const open = Bracket.openMatches(t);
+  const open = (S.config && S.config.bracketOpen) ? Bracket.openMatches(t) : [];
   $('openCount').textContent = open.length;
   const list = $('pickList');
-  if (!S.config || !S.config.bracketVisible) {
+  if (!S.config || !S.config.bracketOpen) {
     list.innerHTML = '<div class="empty">Slutspelet har inte startat än. Matcherna dyker upp här när trädet är lottat.</div>';
   } else if (!t) {
     list.innerHTML = '<div class="empty">Inga matcher än.</div>';
@@ -256,6 +257,9 @@ $('adminLogout').addEventListener('click', () => {
   $('adminLogin').hidden = false; $('adminPanel').hidden = true; $('adminMsg').textContent = '';
   refresh(true);
 });
+$('previewBracket').addEventListener('click', () => { previewing = true; renderAll(); showTab('bracket'); });
+$('closePreview').addEventListener('click', () => { previewing = false; renderAll(); });
+
 $('toggleBracket').addEventListener('click', async () => {
   const open = !(S.config && S.config.bracketOpen);
   if (open && !confirm('Öppna slutspelsträdet för alla?')) return;
@@ -281,10 +285,12 @@ document.querySelectorAll('[data-admin]').forEach(b => b.addEventListener('click
 /* ===== Lås / stängd anmälan ===== */
 function renderGate() {
   const c = S.config || {};
-  $('bracketLocked').style.display = c.bracketVisible ? 'none' : '';
-  $('bracketOpen').style.display = c.bracketVisible ? '' : 'none';
-  // Admin ser trädet även när det är dolt – visa en tydlig markering
-  $('adminPreview').hidden = !(isAdmin && !c.bracketOpen);
+  if (c.bracketOpen || !isAdmin) previewing = false;
+  const show = !!c.bracketOpen || previewing;
+  $('bracketLocked').style.display = show ? 'none' : '';
+  $('bracketOpen').style.display = show ? '' : 'none';
+  $('adminPreview').hidden = !previewing;
+  $('previewBracket').hidden = !!c.bracketOpen;
   const tb = $('toggleBracket');
   tb.textContent = c.bracketOpen ? '🔒 Dölj slutspelsträdet' : '🔓 Öppna slutspelsträdet';
   tb.classList.toggle('ghost', !!c.bracketOpen);
