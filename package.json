@@ -1,0 +1,15 @@
+{
+  "name": "pingis-cup",
+  "version": "1.0.0",
+  "description": "Pingisturnering med anmälan, slutspelsträd och live-resultat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}

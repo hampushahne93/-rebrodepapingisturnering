@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pingisturneringen 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --g-950:#00261a;
+    --g-900:#003b27;
+    --g-800:#00502f;
+    --g:#006633;
+    --g-500:#0b8a4a;
+    --y:#ffd200;
+    --y-600:#e6b800;
+    --y-800:#a88600;
+    --cream:#fff8dc;
+    --glass:rgba(255,255,255,.06);
+    --line:rgba(255,210,0,.25);
+    --radius:22px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none!important}
+  html{scroll-behavior:smooth;background:var(--g-950)}
+  body{
+    font-family:'Outfit',system-ui,sans-serif;
+    color:var(--cream);
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(255,210,0,.18), transparent 60%),
+      radial-gradient(900px 700px at -10% 30%, rgba(11,138,74,.55), transparent 60%),
+      linear-gradient(160deg, var(--g-800), var(--g-950) 70%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  /* subtle grid floor */
+  body::before{
+    content:"";position:fixed;inset:auto -50% -40% -50%;height:80vh;z-index:-1;
+    background-image:
+      linear-gradient(rgba(255,210,0,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,210,0,.08) 1px, transparent 1px);
+    background-size:60px 60px;
+    transform:perspective(600px) rotateX(65deg);
+    mask-image:linear-gradient(to top, #000 10%, transparent 80%);
+  }
+
+  .wrap{max-width:1200px;margin:0 auto;padding:28px 22px 80px}
+
+  /* ---------- HEADER ---------- */
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:34px}
+  .brand{display:flex;align-items:center;gap:14px;font-weight:900;font-size:1.3rem;letter-spacing:.5px}
+  .badge{
+    width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+    background:linear-gradient(145deg,var(--y),var(--y-600));
+    color:var(--g-900);font-size:1.6rem;
+    box-shadow:0 6px 0 var(--y-800), 0 14px 24px rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.6);
+    transform:rotate(-6deg);
+  }
+  .brand small{display:block;font-weight:600;font-size:.75rem;color:var(--y);letter-spacing:2px;text-transform:uppercase}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;margin-bottom:40px;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem,6vw,4.8rem);line-height:.95;font-weight:900;letter-spacing:-1px;
+    text-shadow:0 2px 0 var(--g-900),0 4px 0 var(--g-900),0 6px 0 var(--g-950),0 14px 30px rgba(0,0,0,.45);
+  }
+  .hero h1 span{color:var(--y)}
+  .hero p{margin:18px 0 26px;font-size:1.15rem;opacity:.85;max-width:520px}
+  .hero-stats{display:flex;gap:14px;flex-wrap:wrap}
+  .chip{
+    padding:12px 18px;border-radius:14px;background:var(--glass);border:1px solid var(--line);
+    backdrop-filter:blur(8px);
+    box-shadow:0 5px 0 rgba(0,0,0,.25), 0 10px 20px rgba(0,0,0,.2);
+  }
+  .chip b{display:block;font-size:1.5rem;color:var(--y);line-height:1}
+  .chip span{font-size:.8rem;opacity:.75;text-transform:uppercase;letter-spacing:1px}
+
+  /* 3D ping pong table scene */
+  .scene{height:320px;perspective:900px;position:relative}
+  .table{
+    position:absolute;left:50%;top:55%;width:300px;height:170px;
+    transform:translate(-50%,-50%) rotateX(58deg) rotateZ(-22deg);
+    transform-style:preserve-3d;
+    background:linear-gradient(135deg,var(--g-500),var(--g));
+    border:4px solid #fff;border-radius:6px;
+    box-shadow:0 0 0 6px var(--g-900), 0 40px 60px rgba(0,0,0,.55);
+    animation:float 6s ease-in-out infinite;
+  }
+  .table::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px solid rgba(255,255,255,.8)}
+  .table::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:6px;margin-left:-3px;
+    background:repeating-linear-gradient(0deg,#fff 0 3px,rgba(255,255,255,.2) 3px 6px);
+    transform:rotateY(90deg) translateZ(0);transform-origin:center;height:100%;}
+  .net{position:absolute;top:-4px;bottom:-4px;left:50%;width:4px;margin-left:-2px;background:#fff;
+    transform:rotateY(-90deg);transform-origin:left;}
+  .net-mesh{position:absolute;top:-4px;bottom:-4px;left:50%;width:30px;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.6) 0 1px,transparent 1px 5px),
+               repeating-linear-gradient(0deg,rgba(255,255,255,.6) 0 1px,transparent 1px 5px);
+    transform-origin:left center;transform:rotateY(-90deg);border-top:3px solid #fff}
+  .ball{
+    position:absolute;width:34px;height:34px;border-radius:50%;left:30%;top:20%;
+    background:radial-gradient(circle at 30% 28%, #fff, #fff2b0 30%, var(--y) 60%, var(--y-800));
+    box-shadow:0 0 30px rgba(255,210,0,.6);
+    animation:bounce 2.4s cubic-bezier(.45,0,.55,1) infinite;
+    z-index:2;
+  }
+  .ball-shadow{position:absolute;width:40px;height:12px;border-radius:50%;left:calc(30% - 3px);top:62%;
+    background:rgba(0,0,0,.35);filter:blur(4px);animation:shadow 2.4s cubic-bezier(.45,0,.55,1) infinite}
+  @keyframes bounce{
+    0%{transform:translate(0,0)}
+    25%{transform:translate(70px,140px)}
+    50%{transform:translate(150px,10px)}
+    75%{transform:translate(70px,140px)}
+    100%{transform:translate(0,0)}
+  }
+  @keyframes shadow{
+    0%,50%,100%{transform:translateX(var(--x,0)) scale(.5);opacity:.35}
+    25%,75%{transform:translateX(70px) scale(1);opacity:.8}
+  }
+  @keyframes float{0%,100%{margin-top:0}50%{margin-top:-10px}}
+
+  /* ---------- TABS (3D keycaps) ---------- */
+  .tabs{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:28px;position:sticky;top:12px;z-index:20;
+    padding:10px;border-radius:24px;background:rgba(0,38,26,.55);backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.07);width:fit-content}
+  .tab{
+    --depth:7px;
+    font:inherit;font-weight:800;font-size:1rem;cursor:pointer;border:none;
+    padding:14px 22px;border-radius:16px;color:var(--cream);
+    background:linear-gradient(180deg,var(--g-500),var(--g));
+    box-shadow:0 var(--depth) 0 var(--g-900), 0 calc(var(--depth) + 8px) 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.25);
+    transform:translateY(0);
+    transition:transform .12s, box-shadow .12s, background .2s;
+    display:flex;align-items:center;gap:8px;
+  }
+  .tab:hover{transform:translateY(-3px);box-shadow:0 calc(var(--depth) + 3px) 0 var(--g-900), 0 calc(var(--depth) + 14px) 22px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.25)}
+  .tab:active{transform:translateY(var(--depth));box-shadow:0 0 0 var(--g-900),0 4px 8px rgba(0,0,0,.3)}
+  .tab.active{
+    color:var(--g-900);
+    background:linear-gradient(180deg,#ffe14d,var(--y));
+    box-shadow:0 var(--depth) 0 var(--y-800), 0 calc(var(--depth) + 8px) 24px rgba(255,210,0,.3), inset 0 2px 0 rgba(255,255,255,.7);
+  }
+  .tab .count{background:rgba(0,0,0,.2);padding:2px 9px;border-radius:99px;font-size:.8rem}
+
+  .panel{display:none;animation:in .45s cubic-bezier(.2,.8,.2,1)}
+  .panel.active{display:block}
+  @keyframes in{from{opacity:0;transform:translateY(20px) rotateX(8deg)}to{opacity:1;transform:none}}
+
+  /* ---------- 3D CARDS ---------- */
+  .card{
+    position:relative;border-radius:var(--radius);padding:28px;
+    background:linear-gradient(155deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(10px);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.15) inset,
+      0 10px 0 -2px rgba(0,30,18,.8),
+      0 30px 50px rgba(0,0,0,.4);
+    transform-style:preserve-3d;
+    transition:transform .2s ease-out, box-shadow .2s;
+    will-change:transform;
+  }
+  .card::after{ /* moving glare */
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,.14), transparent 45%);
+    opacity:0;transition:opacity .3s;
+  }
+  .card:hover::after{opacity:1}
+  .card h2{font-size:1.6rem;font-weight:900;margin-bottom:6px;transform:translateZ(30px)}
+  .card .sub{opacity:.7;margin-bottom:22px}
+
+  .grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:26px}
+  .info-list{display:grid;gap:14px}
+  .info{display:flex;gap:14px;align-items:center;padding:16px;border-radius:16px;background:rgba(0,0,0,.18);
+    box-shadow:inset 0 2px 6px rgba(0,0,0,.25);transform:translateZ(20px)}
+  .info .ico{width:46px;height:46px;flex:none;border-radius:14px;display:grid;place-items:center;font-size:1.3rem;
+    background:linear-gradient(145deg,var(--y),var(--y-600));color:var(--g-900);box-shadow:0 4px 0 var(--y-800)}
+  .info b{display:block}
+  .info span{opacity:.7;font-size:.92rem}
+
+  /* ---------- FORM ---------- */
+  form{display:grid;gap:16px;transform:translateZ(25px)}
+  label{font-weight:600;font-size:.9rem;display:block;margin-bottom:7px;opacity:.85}
+  input,select{
+    width:100%;font:inherit;font-size:1.05rem;padding:15px 16px;border-radius:14px;color:var(--cream);
+    background:rgba(0,0,0,.25);border:2px solid transparent;outline:none;
+    box-shadow:inset 0 3px 8px rgba(0,0,0,.35);
+    transition:border-color .2s, background .2s;
+  }
+  input::placeholder{color:rgba(255,248,220,.4)}
+  input:focus,select:focus{border-color:var(--y);background:rgba(0,0,0,.35)}
+  select option{color:#000}
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .levels input{display:none}
+  .levels label{
+    margin:0;text-align:center;padding:14px 6px;border-radius:14px;cursor:pointer;
+    background:rgba(0,0,0,.2);box-shadow:0 4px 0 rgba(0,0,0,.3);transition:.15s;opacity:1;
+  }
+  .levels label:hover{transform:translateY(-2px)}
+  .levels input:checked + label{background:var(--g-500);box-shadow:0 4px 0 var(--g-900), 0 0 0 2px var(--y) inset}
+  .levels label .e{display:block;font-size:1.5rem}
+
+  .btn{
+    --depth:7px;
+    font:inherit;font-weight:900;font-size:1.1rem;letter-spacing:.5px;cursor:pointer;border:none;
+    padding:17px 26px;border-radius:16px;color:var(--g-900);
+    background:linear-gradient(180deg,#ffe14d,var(--y));
+    box-shadow:0 var(--depth) 0 var(--y-800),0 calc(var(--depth) + 10px) 24px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.7);
+    transition:transform .1s, box-shadow .1s;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:translateY(var(--depth));box-shadow:0 0 0 var(--y-800),0 3px 8px rgba(0,0,0,.3)}
+  .btn.ghost{color:var(--cream);background:linear-gradient(180deg,var(--g-500),var(--g));box-shadow:0 var(--depth) 0 var(--g-900),0 calc(var(--depth) + 10px) 24px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+  .btn.small{font-size:.9rem;padding:11px 16px;--depth:5px}
+
+  .msg{min-height:1.4em;font-weight:600}
+  .msg.ok{color:var(--y)} .msg.err{color:#ff9b8a}
+
+  /* countdown */
+  .countdown{display:flex;gap:10px;margin-top:6px}
+  .cd{flex:1;text-align:center;padding:14px 4px;border-radius:14px;
+    background:linear-gradient(180deg,var(--g-900),var(--g-950));
+    box-shadow:0 5px 0 #001510, inset 0 1px 0 rgba(255,255,255,.08)}
+  .cd b{font-size:1.9rem;color:var(--y);display:block;line-height:1;font-variant-numeric:tabular-nums}
+  .cd span{font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;opacity:.6}
+
+  /* ---------- PLAYERS ---------- */
+  .players{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  .player{
+    display:flex;align-items:center;gap:14px;padding:16px;border-radius:18px;
+    background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 7px 0 rgba(0,30,18,.8),0 16px 26px rgba(0,0,0,.3);
+    transition:transform .2s;
+  }
+  .avatar{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:900;
+    color:var(--g-900);background:radial-gradient(circle at 30% 30%,#fff6b8,var(--y) 55%,var(--y-800));
+    box-shadow:0 4px 10px rgba(0,0,0,.35)}
+  .player b{display:block;line-height:1.2}
+  .player span{font-size:.85rem;opacity:.7}
+  .empty{opacity:.6;text-align:center;padding:40px}
+
+  /* ---------- BRACKET ---------- */
+  .bracket-tools{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
+  .bracket-tools .hint{opacity:.65;font-size:.9rem;margin-left:auto}
+  .bracket-scroll{overflow-x:auto;padding:10px 4px 30px;perspective:1600px}
+  .bracket{display:flex;gap:56px;min-width:max-content;padding:0 6px;transform-style:preserve-3d}
+  .round{display:flex;flex-direction:column;min-width:220px}
+  .round h3{text-align:center;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--y);margin-bottom:16px}
+  .round .matches{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:22px}
+  .match{
+    position:relative;border-radius:16px;overflow:visible;
+    background:linear-gradient(180deg,var(--g-500),var(--g));
+    box-shadow:0 6px 0 var(--g-900),0 14px 24px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2);
+    transition:transform .2s;
+  }
+  .match:hover{transform:translateY(-4px) translateZ(20px)}
+  .round:not(:last-child) .match::after{
+    content:"";position:absolute;right:-56px;top:50%;width:56px;height:2px;background:var(--line);
+  }
+  .slot{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:11px 14px;font-weight:600;cursor:default;transition:background .15s;
+  }
+  .slot + .slot{border-top:1px solid rgba(0,0,0,.25)}
+  .slot.clickable{cursor:pointer}
+  .slot.clickable:hover{background:rgba(255,255,255,.1)}
+  .slot.win{background:linear-gradient(90deg,rgba(255,210,0,.95),rgba(255,210,0,.75));color:var(--g-900)}
+  .slot.win::after{content:"🏓";}
+  .slot.lose{opacity:.45;text-decoration:line-through}
+  .slot.tbd{opacity:.45;font-style:italic;font-weight:400}
+  .slot.bye{opacity:.35;font-style:italic;font-weight:400}
+  .slot:first-child{border-radius:16px 16px 0 0}
+  .slot:last-child{border-radius:0 0 16px 16px}
+
+  .champion{
+    align-self:center;min-width:220px;text-align:center;padding:28px 20px;border-radius:22px;
+    background:linear-gradient(160deg,#ffe14d,var(--y) 50%,var(--y-600));
+    color:var(--g-900);
+    box-shadow:0 9px 0 var(--y-800),0 26px 50px rgba(255,210,0,.35),inset 0 2px 0 rgba(255,255,255,.7);
+    animation:float 4s ease-in-out infinite;
+  }
+  .champion .trophy{font-size:3.2rem;filter:drop-shadow(0 6px 4px rgba(0,0,0,.25))}
+  .champion small{display:block;letter-spacing:2px;text-transform:uppercase;font-weight:800;font-size:.75rem}
+  .champion b{font-size:1.5rem;font-weight:900}
+  .group{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:18px;padding:6px 0 14px;position:relative}
+  .group + .group{border-top:1px dashed rgba(255,210,0,.18)}
+  .group-label{font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;opacity:.55;height:14px}
+  .bracket-title{font-size:1.5rem;font-weight:900;margin:10px 0 2px}
+  .bracket-sub{opacity:.7;margin-bottom:10px}
+  .comeback .match{background:linear-gradient(180deg,#1d6b52,#0f5340)}
+  .comeback-card{background:linear-gradient(160deg,#fff,#ffe680 60%,var(--y))}
+  .champion.pending{background:rgba(255,255,255,.06);color:var(--cream);box-shadow:0 8px 0 rgba(0,30,18,.8);border:2px dashed var(--line)}
+
+  /* ---------- RULES ---------- */
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .rule .num{font-size:2.6rem;font-weight:900;color:var(--y);line-height:1;
+    text-shadow:0 3px 0 var(--y-800)}
+  .rule h3{margin:10px 0 6px}
+  .rule p{opacity:.78}
+
+  /* ---------- LOCKED BRACKET ---------- */
+  .locked{text-align:center;max-width:620px;margin:20px auto;padding:44px 32px}
+  .locked .lock{
+    width:96px;height:96px;margin:0 auto 20px;border-radius:28px;display:grid;place-items:center;font-size:2.8rem;
+    background:linear-gradient(145deg,var(--y),var(--y-600));
+    box-shadow:0 9px 0 var(--y-800),0 24px 40px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.6);
+    animation:wiggle 3s ease-in-out infinite;
+  }
+  @keyframes wiggle{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-10deg)}90%{transform:rotate(8deg)}95%{transform:rotate(-4deg)}}
+  .small-cd{max-width:420px;margin:10px auto 0}
+  .closed-msg{text-align:center;padding:30px 10px}
+  .closed-msg .e{font-size:3rem;display:block;margin-bottom:10px}
+
+  /* ---------- LIVE ---------- */
+  .header-right{display:flex;align-items:center;gap:14px}
+  .live{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.85rem;padding:8px 14px;border-radius:99px;
+    background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
+  .live i{width:10px;height:10px;border-radius:50%;background:#999}
+  .live.on i{background:#3ddc84;box-shadow:0 0 0 0 rgba(61,220,132,.7);animation:pulse 1.8s infinite}
+  .live.off i{background:#ff6b5b}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+
+  /* ---------- REPORT ---------- */
+  .pick-list{display:grid;gap:12px;max-height:440px;overflow:auto;padding:4px 4px 12px}
+  .pick{
+    font:inherit;color:var(--cream);text-align:left;cursor:pointer;border:none;
+    padding:14px 16px;border-radius:16px;
+    background:linear-gradient(180deg,var(--g-500),var(--g));
+    box-shadow:0 6px 0 var(--g-900),0 12px 20px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2);
+    transition:transform .12s, box-shadow .12s;
+  }
+  .pick:hover{transform:translateY(-3px)}
+  .pick:active{transform:translateY(5px);box-shadow:0 1px 0 var(--g-900)}
+  .pick small{display:block;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--y);font-weight:800;margin-bottom:4px}
+  .pick b{font-size:1.05rem}
+  .pick .vs-mini{opacity:.6;font-weight:600;margin:0 6px}
+  .score-form{display:grid;gap:18px;margin-top:4px}
+  .score-stage{font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--y);font-weight:800;text-align:center}
+  .score-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+  .score-player{margin:0;opacity:1;display:grid;gap:10px;text-align:center}
+  .score-player span{font-weight:800;font-size:1.1rem}
+  .score-player input{text-align:center;font-size:2.4rem;font-weight:900;padding:14px 6px;color:var(--y)}
+  .vs{font-weight:900;font-size:1.2rem;opacity:.5;margin-top:34px}
+  .score-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .latest{display:grid;gap:10px}
+  .result-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding:12px 14px;border-radius:14px;
+    background:rgba(0,0,0,.2);box-shadow:inset 0 2px 6px rgba(0,0,0,.25);animation:in .4s}
+  .result-row .stage{grid-column:1/-1;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;opacity:.6}
+  .result-row .p{font-weight:600}
+  .result-row .p.w{color:var(--y);font-weight:800}
+  .result-row .p:last-child{text-align:right}
+  .result-row .sc{font-weight:900;font-variant-numeric:tabular-nums;background:var(--g-950);padding:4px 10px;border-radius:10px}
+
+  .admin{margin-top:26px;padding:20px 26px}
+  .admin summary{cursor:pointer;font-weight:800;font-size:1.05rem;list-style:none}
+  .admin summary::-webkit-details-marker{display:none}
+  .admin[open] summary{margin-bottom:14px}
+  .admin-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .admin-row input{max-width:240px}
+  .btn.danger{background:linear-gradient(180deg,#c0392b,#962d22);box-shadow:0 5px 0 #5e1b14,0 12px 20px rgba(0,0,0,.3)}
+  .remove{margin-left:auto;border:none;cursor:pointer;width:30px;height:30px;border-radius:10px;font-weight:900;
+    background:rgba(255,107,91,.2);color:#ffb3a8}
+  .remove:hover{background:rgba(255,107,91,.45)}
+
+  .slot .pts{font-weight:900;font-variant-numeric:tabular-nums;min-width:26px;text-align:right}
+  .slot.win.has-pts::after{content:none}
+  .admin-mode .slot.clickable:hover{outline:2px dashed var(--y);outline-offset:-3px}
+
+  .offline{display:none;margin-bottom:20px;padding:14px 18px;border-radius:16px;background:rgba(255,107,91,.15);border:1px solid rgba(255,107,91,.4)}
+  .offline.show{display:block}
+
+  footer{text-align:center;opacity:.5;margin-top:50px;font-size:.85rem}
+
+  @media (max-width:860px){
+    .hero,.grid-2{grid-template-columns:1fr}
+    .scene{height:240px}
+    .tabs{width:100%;position:static}
+    .header-right .btn{display:none}
+    .tab{flex:1;justify-content:center;padding:12px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="badge">🏓</div>
+      <div><small>Personalturnering</small>Pingis Cup 2026</div>
+    </div>
+    <div class="header-right">
+      <span class="live" id="live"><i></i><span id="liveText">Ansluter…</span></span>
+      <button class="btn small ghost" onclick="showTab('signup')">Anmäl dig →</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Vem tar<br><span>pingiskronan</span><br>i år?</h1>
+      <p>Anmäl dig, se vem du möter och följ hela slutspelet live. Förlorar du första matchen får du en andra chans i comeback-slutspelet – vinnaren där tar sig tillbaka till semifinalen!</p>
+      <div class="hero-stats">
+        <div class="chip"><b id="statPlayers">0</b><span>Anmälda</span></div>
+        <div class="chip"><b id="statRounds">–</b><span>Omgångar</span></div>
+        <div class="chip"><b>27/11</b><span>Finaldag</span></div>
+      </div>
+    </div>
+    <div class="scene" aria-hidden="true">
+      <div class="table"><div class="net-mesh"></div></div>
+      <div class="ball-shadow"></div>
+      <div class="ball"></div>
+    </div>
+  </section>
+
+  <div class="offline" id="offline">⚠️ Får ingen kontakt med servern just nu – försöker igen automatiskt.</div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="signup">✍️ Anmälan</button>
+    <button class="tab" data-tab="bracket">🏆 Slutspelsträd</button>
+    <button class="tab" data-tab="report">📝 Lämna in resultat <span class="count" id="openCount">0</span></button>
+    <button class="tab" data-tab="players">👥 Deltagare <span class="count" id="tabCount">0</span></button>
+    <button class="tab" data-tab="rules">📋 Regler</button>
+  </nav>
+
+  <!-- SIGNUP -->
+  <section class="panel active" id="panel-signup">
+    <div class="grid-2">
+      <div class="card tilt">
+        <h2>Jag vill vara med!</h2>
+        <p class="sub">Fyll i nedan så hamnar du i lottningen.</p>
+        <form id="signupForm" autocomplete="off">
+          <div>
+            <label for="name">Namn</label>
+            <input id="name" placeholder="t.ex. Anna Andersson" required maxlength="40">
+          </div>
+          <button class="btn" type="submit">Anmäl mig 🏓</button>
+          <div class="msg" id="msg"></div>
+        </form>
+      </div>
+
+      <div class="card tilt">
+        <h2>Turneringsinfo</h2>
+        <p class="sub">Allt du behöver veta.</p>
+        <div class="info-list">
+          <div class="info"><div class="ico">📅</div><div><b>Gruppspel & slutspel</b><span>Vecka 48 · Final fredag 27/11 kl 15:00</span></div></div>
+          <div class="info"><div class="ico">📍</div><div><b>Plats</b><span>Personalrummet, plan 3</span></div></div>
+          <div class="info"><div class="ico">⚡</div><div><b>Format</b><span>Utslag med comeback-slutspel, till 11 poäng</span></div></div>
+          <div class="info"><div class="ico">🏆</div><div><b>Pris</b><span>Pokal + evig ära i fikarummet</span></div></div>
+        </div>
+        <p style="margin:22px 0 4px;font-weight:600;opacity:.85">Sista anmälan om</p>
+        <div class="countdown" id="countdown">
+          <div class="cd"><b class="cdD">0</b><span>dagar</span></div>
+          <div class="cd"><b class="cdH">0</b><span>tim</span></div>
+          <div class="cd"><b class="cdM">0</b><span>min</span></div>
+          <div class="cd"><b class="cdS">0</b><span>sek</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRACKET -->
+  <section class="panel" id="panel-bracket">
+    <div class="card locked" id="bracketLocked">
+      <div class="lock">🔒</div>
+      <h2>Slutspelsträdet är hemligt</h2>
+      <p class="sub">Trädet lottas och avslöjas när anmälan stänger. Håll ut!</p>
+      <div class="countdown small-cd">
+        <div class="cd"><b class="cdD">0</b><span>dagar</span></div>
+        <div class="cd"><b class="cdH">0</b><span>tim</span></div>
+        <div class="cd"><b class="cdM">0</b><span>min</span></div>
+        <div class="cd"><b class="cdS">0</b><span>sek</span></div>
+      </div>
+    </div>
+    <div id="bracketOpen">
+    <div class="bracket-tools">
+      <button class="btn small" onclick="showTab('report')">📝 Lämna in resultat</button>
+      <span class="hint" id="bracketHint">Trädet uppdateras automatiskt när någon lämnar in ett resultat</span>
+    </div>
+    <h2 class="bracket-title">🏆 Huvudslutspelet</h2>
+    <p class="bracket-sub">Tre grupper – vinnaren i varje grupp går till semifinal.</p>
+    <div class="bracket-scroll">
+      <div class="bracket" id="bracket"></div>
+    </div>
+    <h2 class="bracket-title">🔄 Comeback-slutspelet</h2>
+    <p class="bracket-sub">Förlorar du din första match får du en andra chans här. Vinnaren tar sista platsen i semifinalen!</p>
+    <div class="bracket-scroll">
+      <div class="bracket comeback" id="comeback"></div>
+    </div>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section class="panel" id="panel-report">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Lämna in resultat</h2>
+        <p class="sub">1. Välj din match &nbsp;·&nbsp; 2. Fyll i poängen &nbsp;·&nbsp; 3. Skicka in</p>
+        <div class="pick-list" id="pickList"></div>
+        <form id="reportForm" class="score-form" autocomplete="off" hidden>
+          <div class="score-stage" id="rpStage"></div>
+          <div class="score-grid">
+            <label class="score-player"><span id="rpA"></span><input id="rsA" type="number" min="0" max="99" inputmode="numeric" placeholder="0" required></label>
+            <div class="vs">VS</div>
+            <label class="score-player"><span id="rpB"></span><input id="rsB" type="number" min="0" max="99" inputmode="numeric" placeholder="0" required></label>
+          </div>
+          <div class="score-actions">
+            <button class="btn" type="submit">Skicka in resultat ✅</button>
+            <button class="btn small ghost" type="button" id="rpCancel">Avbryt</button>
+          </div>
+        </form>
+        <div class="msg" id="reportMsg"></div>
+      </div>
+      <div class="card">
+        <h2>Senaste resultat</h2>
+        <p class="sub">Uppdateras live för alla.</p>
+        <div class="latest" id="latest"></div>
+      </div>
+    </div>
+
+    <details class="card admin" id="adminBox">
+      <summary>🔑 Admin</summary>
+      <div id="adminLogin" class="admin-row">
+        <input id="adminCode" type="password" placeholder="Admin-kod">
+        <button class="btn small" id="adminLoginBtn" type="button">Logga in</button>
+      </div>
+      <div id="adminPanel" hidden>
+        <p class="sub">Som admin kan du klicka på en spelare i trädet för att ändra eller ta bort ett resultat, och ta bort spelare under Deltagare.</p>
+        <div class="admin-row">
+          <button class="btn small" type="button" data-admin="draw">🎲 Lotta om trädet</button>
+          <button class="btn small ghost" type="button" data-admin="reset-results">↺ Nollställ alla resultat</button>
+          <button class="btn small ghost" type="button" data-admin="test-players">🧪 Lägg till testspelare</button>
+          <button class="btn small ghost danger" type="button" data-admin="clear-all">🗑️ Rensa allt</button>
+          <button class="btn small ghost" type="button" id="adminLogout">Logga ut</button>
+        </div>
+      </div>
+      <div class="msg" id="adminMsg"></div>
+    </details>
+  </section>
+
+  <!-- PLAYERS -->
+  <section class="panel" id="panel-players">
+    <div class="players" id="players"></div>
+  </section>
+
+  <!-- RULES -->
+  <section class="panel" id="panel-rules">
+    <div class="rules">
+      <div class="card tilt rule"><div class="num">01</div><h3>Till 11</h3><p>Varje match spelas till 11 poäng. Man måste vinna med 2 poängs marginal.</p></div>
+      <div class="card tilt rule"><div class="num">02</div><h3>Serve</h3><p>Vid 10–10 servar man varannan serve tills någon vinner med 2 poäng.</p></div>
+      <div class="card tilt rule"><div class="num">03</div><h3>Rapportera</h3><p>Lämna in erat resultat under fliken "Lämna in resultat" direkt efter matchen.</p></div>
+      <div class="card tilt rule"><div class="num">04</div><h3>Andra chansen</h3><p>Förlorar du din första match hamnar du i comeback-slutspelet. Vinnaren där får en plats i semifinalen.</p></div>
+    </div>
+  </section>
+
+  <footer>Pingis Cup 2026 · Gjord med 💛 och 💚</footer>
+</div>
+
+<script src="bracket.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
