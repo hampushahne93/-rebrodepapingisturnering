@@ -10,7 +10,6 @@ const B = require('./public/bracket.js');
 /* ===== Inställningar (kan ändras med miljövariabler på Render) ===== */
 const PORT = process.env.PORT || 3000;
 const DEADLINE = new Date(process.env.DEADLINE || '2026-11-20T23:59:00+01:00'); // sista anmälan
-const LOCK_BRACKET = (process.env.LOCK_BRACKET || 'false') === 'true';          // dölj trädet tills deadline
 const ADMIN_CODE = process.env.ADMIN_CODE || '';
 const DATABASE_URL = process.env.DATABASE_URL || '';
 
@@ -81,11 +80,13 @@ const store = DATABASE_URL ? neonStore() : memoryStore();
 
 /* ===== Turneringsregler ===== */
 const signupOpen = () => new Date() < DEADLINE;
-const bracketVisible = isAdmin => !LOCK_BRACKET || isAdmin || !signupOpen();
+// Trädet visas när admin har öppnat det. Admin ser det alltid.
+const bracketVisible = (d, isAdmin) => !!isAdmin || !!d.bracketOpen;
 
 function normalize(d) {
   d.players = d.players || []; d.results = d.results || {}; d.scores = d.scores || {}; d.log = d.log || [];
   if (d.order === undefined) d.order = null;
+  if (d.bracketOpen === undefined) d.bracketOpen = false;
   return d;
 }
 function draw(d) {
@@ -149,11 +150,11 @@ async function getState(req) {
   let { data, version } = await store.get();
   normalize(data);
   // Lotta automatiskt när trädet ska visas (vid deadline, eller direkt om trädet är upplåst)
-  if (bracketVisible(false) && needsDraw(data)) {
+  if (bracketVisible(data, admin) && needsDraw(data)) {
     await store.mutate(d => { normalize(d); if (!needsDraw(d)) return NOCHANGE; draw(d); });
     ({ data, version } = await store.get()); normalize(data);
   }
-  const visible = bracketVisible(admin);
+  const visible = bracketVisible(data, admin);
   return {
     version,
     players: data.players,
@@ -161,7 +162,7 @@ async function getState(req) {
     results: visible ? data.results : {},
     scores: visible ? data.scores : {},
     log: visible ? data.log.slice(0, 15) : [],
-    config: { deadline: DEADLINE.toISOString(), signupOpen: signupOpen(), bracketVisible: visible, locked: LOCK_BRACKET }
+    config: { deadline: DEADLINE.toISOString(), signupOpen: signupOpen(), bracketVisible: visible, bracketOpen: !!data.bracketOpen }
   };
 }
 
@@ -182,12 +183,12 @@ const routes = {
   },
 
   'POST /api/report': async (req, body) => {
-    if (!bracketVisible(false)) throw new HttpError(400, 'Slutspelet har inte startat än.');
     const pa = Number(body.scoreA), pb = Number(body.scoreB);
     const err = B.validScore(pa, pb);
     if (err) throw new HttpError(400, err);
     return store.mutate(d => {
       normalize(d);
+      if (!d.bracketOpen) throw new HttpError(400, 'Slutspelet har inte startat än.');
       const m = findMatch(d, String(body.key));
       if (!(m.a && m.b)) throw new HttpError(400, 'Matchen är inte redo att spelas än.');
       if (m.winner !== undefined) throw new HttpError(409, 'Den här matchen har redan ett resultat.');
@@ -203,6 +204,16 @@ const routes = {
 
   /* ----- Admin ----- */
   'POST /api/admin/check': async req => { requireAdmin(req); return { ok: true }; },
+
+  'POST /api/admin/bracket': async (req, body) => {
+    requireAdmin(req);
+    await store.mutate(d => {
+      normalize(d);
+      d.bracketOpen = !!body.open;
+      if (d.bracketOpen && needsDraw(d)) draw(d);
+    });
+    return { ok: true, open: !!body.open };
+  },
 
   'POST /api/admin/draw': async req => {
     requireAdmin(req);

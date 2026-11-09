@@ -52,7 +52,6 @@ public/bracket.js
 | `DATABASE_URL` | connection string från Neon |
 | `ADMIN_CODE` | en hemlig kod som bara du vet, t.ex. `pingis-boss-2026` |
 | `DEADLINE` | *(valfri)* sista anmälan, t.ex. `2026-11-20T23:59:00+01:00` |
-| `LOCK_BRACKET` | *(valfri)* `true` = trädet är hemligt tills deadline. Standard är `false`. |
 
 4. Klicka **Deploy**. När det står *Live* får du en adress, t.ex. `https://pingis-cup.onrender.com`. Det är länken du skickar till kollegorna.
 
@@ -64,6 +63,7 @@ public/bracket.js
 
 Längst ner under fliken **Lämna in resultat** finns **🔑 Admin**. Logga in med din `ADMIN_CODE`. Därefter kan du:
 
+- **Öppna / dölja slutspelsträdet** för alla
 - **Lotta om trädet** (alla resultat nollställs)
 - **Nollställa alla resultat**
 - **Lägga till testspelare**, för att prova sidan
@@ -73,7 +73,8 @@ Längst ner under fliken **Lämna in resultat** finns **🔑 Admin**. Logga in m
 
 ## Hur lottningen fungerar
 
-- Trädet lottas automatiskt. Är `LOCK_BRACKET=true` sker det när anmälan stänger, annars direkt.
+- Slutspelsträdet är **dolt** tills du öppnar det under 🔑 Admin → **Öppna slutspelsträdet**. Som admin ser du trädet hela tiden, så du kan kolla lottningen först.
+- När trädet öppnas lottas det automatiskt, om det inte redan är lottat.
 - Om en ny spelare anmäler sig innan deadline lottas trädet om och resultaten nollställs. Spela alltså inga riktiga matcher förrän anmälan är stängd.
 
 ## Testa lokalt (valfritt)

@@ -256,6 +256,16 @@ $('adminLogout').addEventListener('click', () => {
   $('adminLogin').hidden = false; $('adminPanel').hidden = true; $('adminMsg').textContent = '';
   refresh(true);
 });
+$('toggleBracket').addEventListener('click', async () => {
+  const open = !(S.config && S.config.bracketOpen);
+  if (open && !confirm('Öppna slutspelsträdet för alla?')) return;
+  try {
+    await api('/api/admin/bracket', { open });
+    setMsg($('adminMsg'), open ? 'Slutspelsträdet är nu öppet för alla 🎉' : 'Slutspelsträdet är nu dolt.', true);
+    refresh(true);
+  } catch (err) { alertMsg(err.message); }
+});
+
 const CONFIRM = {
   'draw': 'Lotta om trädet? Alla resultat försvinner.',
   'reset-results': 'Nollställa alla resultat?',
@@ -273,6 +283,14 @@ function renderGate() {
   const c = S.config || {};
   $('bracketLocked').style.display = c.bracketVisible ? 'none' : '';
   $('bracketOpen').style.display = c.bracketVisible ? '' : 'none';
+  // Admin ser trädet även när det är dolt – visa en tydlig markering
+  $('adminPreview').hidden = !(isAdmin && !c.bracketOpen);
+  const tb = $('toggleBracket');
+  tb.textContent = c.bracketOpen ? '🔒 Dölj slutspelsträdet' : '🔓 Öppna slutspelsträdet';
+  tb.classList.toggle('ghost', !!c.bracketOpen);
+  $('bracketStatus').innerHTML = c.bracketOpen
+    ? 'Slutspelsträdet är <b>öppet</b> – alla kan se det och lämna in resultat.'
+    : 'Slutspelsträdet är <b>dolt</b> – bara du som admin ser det.';
   const form = $('signupForm');
   if (c.signupOpen === false && !form.dataset.closed) {
     form.dataset.closed = '1';
